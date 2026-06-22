@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import tiktoken
 import torch
@@ -18,6 +20,9 @@ elif torch.backends.mps.is_available():
 else:
     device = "cpu"
 
+DATA_DIR = "/content/drive/MyDrive/nanogpt/data"
+
+
 print(f"Using device: {device}")
 eval_iters = 50
 n_embed = 384
@@ -31,7 +36,11 @@ torch.manual_seed(1337)
 # data loading
 def get_batch(split):
     # generate a small batch of data of inputs x and targets y
-    path = "data/train.bin" if split == "train" else "data/val.bin"
+    path = (
+        os.path.join(DATA_DIR, "train.bin")
+        if split == "train"
+        else os.path.join(DATA_DIR, "val.bin")
+    )
     data = np.memmap(path, dtype=np.uint16, mode="r")
     ix = torch.randint(len(data) - block_size, (batch_size,))
     x = torch.stack([torch.from_numpy(data[i : i + block_size]) for i in ix]).long()

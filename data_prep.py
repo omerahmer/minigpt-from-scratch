@@ -9,6 +9,8 @@ enc = tiktoken.get_encoding("gpt2")
 train = ds["train"]
 val = ds["validation"]
 
+DATA_DIR = "/content/drive/MyDrive/nanogpt/data"
+
 
 def encode(example):
     text = example["text"]
@@ -24,8 +26,8 @@ train_total = numpy.sum(train_map["len"])
 val_total = numpy.sum(val_map["len"])
 
 os.makedirs("data", exist_ok=True)
-train_path = os.path.join("data", "train.bin")
-val_path = os.path.join("data", "val.bin")
+train_path = os.path.join(DATA_DIR, "train.bin")
+val_path = os.path.join(DATA_DIR, "val.bin")
 
 train_arr = numpy.memmap(
     train_path, dtype=numpy.uint16, mode="w+", shape=(train_total,)
